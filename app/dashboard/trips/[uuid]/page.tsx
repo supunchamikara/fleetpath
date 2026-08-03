@@ -93,7 +93,7 @@ export default async function TripDetailPage({
 
       <Box style={{ padding: 0 }}>
         <div className="scroll-x">
-          <table>
+          <table className="tight">
             <tbody>
               {rows.map(([label, value]) => (
                 <tr key={label}>

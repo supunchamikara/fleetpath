@@ -101,7 +101,62 @@ td { padding: 10px 8px; border-bottom: 1px solid rgba(29,31,32,0.08); }
 tbody tr:hover { background: rgba(29, 31, 32, 0.04); }
 
 .grid { display: grid; gap: 10px; }
-.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+/* padding-inline, not the `padding` shorthand: the phone rules at the foot
+   re-declare it, and a shorthand there would silently zero .page's top and
+   bottom padding along with it. */
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 24px; }
+.page { padding-block: 28px 60px; }
 
 /* Wide tables must scroll inside their own box, never the page. */
-.scroll-x { overflow-x: auto; }
+.scroll-x { overflow-x: auto; overscroll-behavior-x: contain; }
+/* `table { width: 100% }` on its own means a narrow screen compresses the
+   columns into slivers instead of scrolling the box — a route cell ends up
+   one word per line. Holding a natural width is what makes .scroll-x scroll. */
+.scroll-x > table { min-width: 700px; }
+/* Label/value tables are two columns and read fine at any width. A record id
+   is one unbreakable token, though, and would drag the table into a sideways
+   scroll on its own, so let long values break mid-word. */
+.scroll-x > table.tight { min-width: 0; }
+.scroll-x > table.tight td { overflow-wrap: anywhere; }
+
+/* Dashboard header. Classes rather than inline styles so the phone rules
+   below can override them. */
+.top-bar { display: flex; align-items: center; gap: 24px; min-height: 62px; }
+.top-brand { display: flex; align-items: center; gap: 10px; }
+.top-mark { width: 22px; height: 22px; background: var(--accent); flex: none; }
+.top-name {
+  font-family: var(--font-heading), sans-serif; font-weight: 600;
+  font-size: 17px; letter-spacing: 0.06em;
+}
+.top-account { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+/* Truncates rather than hides: which account is signed in still matters on a
+   phone, it just cannot have half the bar. */
+.top-email {
+  font-size: 12.5px; max-width: 42vw;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.nav-tabs { display: flex; gap: 18px; margin-left: 10px; }
+.nav-tabs a {
+  font-family: var(--font-heading), sans-serif; font-size: 15px;
+  padding-bottom: 2px; border-bottom: 2px solid transparent; white-space: nowrap;
+}
+.nav-tabs a.on { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Phones. This is a desk tool, but it gets opened on a handset often enough
+   that it has to hold together at 360px. */
+@media (max-width: 720px) {
+  .wrap { padding-inline: 14px; }
+  .page { padding-block: 20px 48px; }
+
+  h1 { font-size: 27px; }
+  h2 { font-size: 21px; }
+
+  /* Brand and account keep the first row; the tabs drop to a full-width row
+     of their own and scroll sideways if four of them still will not fit. */
+  .top-bar { flex-wrap: wrap; gap: 10px; min-height: 0; padding-top: 10px; }
+  .nav-tabs {
+    order: 3; width: 100%; margin-left: 0; gap: 20px;
+    overflow-x: auto; padding-bottom: 8px;
+  }
+}

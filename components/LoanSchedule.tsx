@@ -22,7 +22,8 @@ export function LoanSchedule({
   return (
     <Box style={{ padding: 0 }}>
       <div className="scroll-x">
-        <table>
+        {/* Four columns: narrower than the default wide-table floor. */}
+        <table style={{ minWidth: 460 }}>
           <thead>
             <tr>
               <th style={{ width: 70 }}>Month</th>

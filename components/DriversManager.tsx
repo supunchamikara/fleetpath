@@ -162,8 +162,16 @@ export function DriversManager({
 
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 14 }}>
-        <p className="muted" style={{ fontSize: 13.5, maxWidth: 620, flex: 1 }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          flexWrap: 'wrap',
+          marginBottom: 14,
+        }}
+      >
+        <p className="muted" style={{ fontSize: 13.5, maxWidth: 620, flex: '1 1 240px' }}>
           Changes made here reach the phones on their next sync. A new driver can
           sign in with their username and PIN once their handset has synced.
         </p>
