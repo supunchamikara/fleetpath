@@ -64,7 +64,7 @@ export function TripFiltersBar({
       placeholder={placeholder}
       onChange={(e) => set(k, e.target.value)}
       onKeyDown={(e) => e.key === 'Enter' && apply()}
-      style={{ padding: '4px 8px', width: '100%' }}
+      style={{ padding: '4px 8px', width: '100%', minWidth: 0, flex: 1 }}
     />
   );
 
@@ -97,32 +97,39 @@ export function TripFiltersBar({
 
       {open && (
         <Box style={{ marginTop: 10 }}>
+          {/* Date sits on its own row. A `type=date` input has a wide
+              intrinsic minimum — two of them shared a grid cell with the
+              numeric ranges and pushed straight through it. */}
+          <div style={{ maxWidth: 420 }}>
+            <label className="muted" style={{ fontSize: 12 }}>DATE</label>
+            <div style={{ display: 'flex', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
+              <input
+                className="input"
+                type="date"
+                value={draft.from ?? ''}
+                onChange={(e) => set('from', e.target.value)}
+                style={{ padding: '4px 8px', flex: '1 1 170px', minWidth: 0 }}
+              />
+              <input
+                className="input"
+                type="date"
+                value={draft.to ?? ''}
+                onChange={(e) => set('to', e.target.value)}
+                style={{ padding: '4px 8px', flex: '1 1 170px', minWidth: 0 }}
+              />
+            </div>
+          </div>
+
           <div
             className="grid"
-            style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 12 }}
+            style={{
+              gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
+              gap: 12,
+              marginTop: 14,
+            }}
           >
-            <div>
-              <label className="muted" style={{ fontSize: 12 }}>DATE</label>
-              <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
-                <input
-                  className="input"
-                  type="date"
-                  value={draft.from ?? ''}
-                  onChange={(e) => set('from', e.target.value)}
-                  style={{ padding: '4px 8px', width: '100%' }}
-                />
-                <input
-                  className="input"
-                  type="date"
-                  value={draft.to ?? ''}
-                  onChange={(e) => set('to', e.target.value)}
-                  style={{ padding: '4px 8px', width: '100%' }}
-                />
-              </div>
-            </div>
-
             {RANGES.map((r) => (
-              <div key={r.label}>
+              <div key={r.label} style={{ minWidth: 0 }}>
                 <label className="muted" style={{ fontSize: 12 }}>
                   {r.label.toUpperCase()} ({r.unit})
                 </label>
