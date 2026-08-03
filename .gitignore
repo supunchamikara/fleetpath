@@ -1,0 +1,21 @@
+node_modules/
+.next/
+out/
+build/
+
+# Local secrets. `.env.local.example` is the committed template.
+.env.local
+.env*.local
+
+# Build artefacts
+next-env.d.ts
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Vercel
+.vercel
