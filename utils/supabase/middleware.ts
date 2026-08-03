@@ -1,8 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, isConfigured } from './env';
 
 /**
  * Refreshes the auth cookie on every request and gates the dashboard.
@@ -15,7 +13,12 @@ const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
-  const supabase = createServerClient(url!, key!, {
+  // Only reachable in dev — a production build with these unset fails in
+  // `env.ts`. Passing through lets /login render its "Not configured" notice
+  // instead of every route dying on a client that cannot be constructed.
+  if (!isConfigured) return response;
+
+  const supabase = createServerClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
