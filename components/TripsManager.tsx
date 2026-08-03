@@ -291,7 +291,12 @@ export function TripsManager({
                           </td>
                           <td>{t.user_uuid ? drivers[t.user_uuid] ?? '—' : '—'}</td>
                           <td style={{ maxWidth: 340 }}>
-                            {(t.start_address ?? '—')} → {(t.end_address ?? '—')}
+                            <Link
+                              href={`/dashboard/trips/${t.uuid}`}
+                              className="cell-link"
+                            >
+                              {(t.start_address ?? '—')} → {(t.end_address ?? '—')}
+                            </Link>
                           </td>
                           <td className="metric" style={{ textAlign: 'right' }}>
                             {isEditing ? (

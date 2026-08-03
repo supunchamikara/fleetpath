@@ -139,7 +139,9 @@ export default async function OverviewPage() {
                     </td>
                     <td>{t.user_uuid ? byDriver.get(t.user_uuid) ?? '—' : '—'}</td>
                     <td style={{ maxWidth: 320 }}>
-                      {(t.start_address ?? '—')} → {(t.end_address ?? '—')}
+                      <Link href={`/dashboard/trips/${t.uuid}`} className="cell-link">
+                        {(t.start_address ?? '—')} → {(t.end_address ?? '—')}
+                      </Link>
                     </td>
                     <td className="metric" style={{ textAlign: 'right' }}>{rupees(t.amount)}</td>
                     <td className="metric" style={{ textAlign: 'right' }}>{km(t.distance_meters)} km</td>

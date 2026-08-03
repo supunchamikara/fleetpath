@@ -136,6 +136,18 @@ tbody tr:hover { background: rgba(29, 31, 32, 0.04); }
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
+/* A link filling its whole table cell, so the touch target is the cell rather
+   than the text. The trip number beside it is already accent; the route is the
+   widest column and would shout in the same colour, so it keeps body text and
+   a hairline underline — visible without a hover, which a phone never gets. */
+.cell-link {
+  display: block;
+  text-decoration: underline;
+  text-decoration-color: var(--neutral-400);
+  text-underline-offset: 2px;
+}
+.cell-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
 .nav-tabs { display: flex; gap: 18px; margin-left: 10px; }
 .nav-tabs a {
   font-family: var(--font-heading), sans-serif; font-size: 15px;
