@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
+import { driverScope } from '@/lib/driverScope.server';
 import { Box } from '@/components/Blueprint';
 import { SummaryCard, summarise } from '@/components/SummaryCard';
 import type { Trip, Driver } from '@/lib/types';
@@ -13,12 +14,13 @@ export const dynamic = 'force-dynamic';
 
 export default async function OverviewPage() {
   const supabase = createClient(await cookies());
+  const scope = await driverScope();
 
   // No limit: an "all time" total taken from the most recent 500 journeys is
   // not an all-time total, it just looks like one. `count` is the real number
   // of rows in the table, so a truncated fetch can be detected and said out
   // loud rather than quietly under-reporting money.
-  const { data: trips, error, count } = await supabase
+  let query = supabase
     .from('trips')
     // Written out rather than built from a constant: supabase-js parses this
     // literal at type level, and a variable degrades the result to an error
@@ -28,6 +30,12 @@ export default async function OverviewPage() {
       { count: 'exact' },
     )
     .order('start_time', { ascending: false });
+
+  // Narrowed in Postgres, so `count` is the scoped total and the truncation
+  // warning below still means what it says.
+  if (scope) query = query.eq('user_uuid', scope);
+
+  const { data: trips, error, count } = await query;
 
   const { data: drivers } = await supabase.from('app_users').select('*');
 
@@ -64,7 +72,10 @@ export default async function OverviewPage() {
       <h1 style={{ margin: '4px 0 6px' }}>Summary</h1>
       <p className="muted" style={{ fontSize: 13.5, marginBottom: 18 }}>
         {allTime.trips} journey{allTime.trips === 1 ? '' : 's'} from{' '}
-        {(drivers ?? []).length} driver{(drivers ?? []).length === 1 ? '' : 's'}.
+        {scope
+          ? byDriver.get(scope) ?? 'this driver'
+          : `${(drivers ?? []).length} driver${(drivers ?? []).length === 1 ? '' : 's'}`}
+        .
       </p>
 
       {truncated && (

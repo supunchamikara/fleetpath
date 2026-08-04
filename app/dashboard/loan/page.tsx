@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
+import { driverScope } from '@/lib/driverScope.server';
 import { Box } from '@/components/Blueprint';
 import { monthKey, rupees } from '@/lib/format';
 import { LOAN, schedule } from '@/lib/loan';
@@ -10,12 +11,17 @@ export const dynamic = 'force-dynamic';
 
 export default async function LoanPage() {
   const supabase = createClient(await cookies());
+  const scope = await driverScope();
 
   // Only the two columns the earnings column needs. No limit: a schedule that
   // silently dropped older months would misreport what was earned against them.
-  const { data, error, count } = await supabase
-    .from('trips')
-    .select('start_time, amount', { count: 'exact' });
+  let query = supabase.from('trips').select('start_time, amount', { count: 'exact' });
+
+  // The instalments are the vehicle's either way; scoping changes the earnings
+  // beside them into what this one driver brought in against them.
+  if (scope) query = query.eq('user_uuid', scope);
+
+  const { data, error, count } = await query;
 
   if (error) {
     return (
@@ -100,7 +106,7 @@ export default async function LoanPage() {
             {totalEarned === 0 ? '—' : rupees(totalEarned)}
           </div>
           <div className="muted" style={{ fontSize: 12.5, marginTop: 4 }}>
-            across every synced journey
+            {scope ? 'from the selected driver only' : 'across every synced journey'}
           </div>
         </Box>
       </div>

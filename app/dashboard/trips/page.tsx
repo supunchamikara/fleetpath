@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
+import { driverScope } from '@/lib/driverScope.server';
 import { Box } from '@/components/Blueprint';
 import { TripsManager } from '@/components/TripsManager';
 import { TripFiltersBar } from '@/components/TripFilters';
@@ -26,6 +27,7 @@ export default async function TripsPage({
 }) {
   const sp = await searchParams;
   const supabase = createClient(await cookies());
+  const scope = await driverScope();
 
   const one = (k: string) => {
     const v = sp[k];
@@ -43,6 +45,9 @@ export default async function TripsPage({
       { count: 'exact' },
     )
     .order('start_time', { ascending: false });
+
+  // The header's scope, applied before the per-page filters below.
+  if (scope) query = query.eq('user_uuid', scope);
 
   // Pushed down to Postgres: these are real columns, so the database can do the
   // narrowing instead of shipping rows here to be discarded.
