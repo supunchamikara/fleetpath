@@ -8,6 +8,7 @@ const TABS = [
   { href: '/dashboard/trips', label: 'Journeys' },
   { href: '/dashboard/loan', label: 'Loan' },
   { href: '/dashboard/drivers', label: 'Drivers' },
+  { href: '/dashboard/locate', label: 'Locate' },
 ];
 
 export function NavTabs() {

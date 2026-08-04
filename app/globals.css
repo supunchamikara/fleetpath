@@ -128,7 +128,16 @@ tbody tr:hover { background: rgba(29, 31, 32, 0.04); }
   font-family: var(--font-heading), sans-serif; font-weight: 600;
   font-size: 17px; letter-spacing: 0.06em;
 }
-.top-account { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+.top-account { display: flex; align-items: center; gap: 14px; }
+/* Takes the slack in the bar, so the tabs stay left and the account stays right. */
+.top-scope { margin-left: auto; display: flex; align-items: center; gap: 7px; }
+.top-scope > span { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+.top-scope select {
+  font-size: 13px; padding: 4px 8px; border-radius: 0;
+  background: var(--surface); border: 1px solid var(--divider); outline: none;
+  max-width: 46vw; text-overflow: ellipsis;
+}
+.top-scope select:focus { border-color: var(--accent); }
 /* Truncates rather than hides: which account is signed in still matters on a
    phone, it just cannot have half the bar. */
 .top-email {
@@ -171,4 +180,8 @@ tbody tr:hover { background: rgba(29, 31, 32, 0.04); }
     order: 3; width: 100%; margin-left: 0; gap: 20px;
     overflow-x: auto; padding-bottom: 8px;
   }
+  /* Below the tabs, on a line of its own: it changes what every page shows,
+     so it should not be a detail tucked into the corner of a cramped bar. */
+  .top-scope { order: 4; width: 100%; margin-left: 0; padding-bottom: 10px; }
+  .top-scope select { flex: 1; max-width: none; }
 }
